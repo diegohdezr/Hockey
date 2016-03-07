@@ -19,6 +19,7 @@ import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
 import static android.opengl.GLES20.GL_FLOAT;
 import static android.opengl.GLES20.glClear;
 import static android.opengl.GLES20.glClearColor;
+import static android.opengl.GLES20.glEnableVertexAttribArray;
 import static android.opengl.GLES20.glGetAttribLocation;
 import static android.opengl.GLES20.glGetUniformLocation;
 import static android.opengl.GLES20.glUseProgram;
@@ -96,7 +97,7 @@ public class AirHockeyRenderer implements GLSurfaceView.Renderer {
         //passing incorrect arguments to this function can lead to strange results or even crash the app
         //so basically debug here if the error is not clear!
         glVertexAttribPointer(aPositionLocation,POSITION_COMPRONENT_COUNT, GL_FLOAT,false,0, vertexData);
-
+        glEnableVertexAttribArray(aPositionLocation);
     }
 
     @Override
