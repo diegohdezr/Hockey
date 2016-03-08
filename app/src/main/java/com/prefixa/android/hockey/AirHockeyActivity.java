@@ -38,7 +38,7 @@ public class AirHockeyActivity extends AppCompatActivity {
             myGLSurfaceView.setEGLContextClientVersion(2);
 
             myGLSurfaceView.setRenderer(new AirHockeyRenderer(this));
-            renderSet = false;
+            renderSet = true;
         }else{
             Toast.makeText(this,"OpenGL not suported",Toast.LENGTH_SHORT).show();
             return;

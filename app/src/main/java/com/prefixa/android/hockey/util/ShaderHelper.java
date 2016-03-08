@@ -45,7 +45,8 @@ public class ShaderHelper {
         }
         //upload and compile the shader source to OpenGL
         glShaderSource(shaderObjectId, shaderCode);
-        glShaderSource(shaderObjectId, shaderCode);
+        //compile the shader
+        glCompileShader(shaderObjectId);
         //check if the shader compiled correctly
         final int[] compileStatus = new int[1];
         glGetShaderiv(shaderObjectId, GL_COMPILE_STATUS, compileStatus, 0);
