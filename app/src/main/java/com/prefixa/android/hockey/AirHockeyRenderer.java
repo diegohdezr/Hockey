@@ -20,6 +20,7 @@ import static android.opengl.GLES20.GL_FLOAT;
 import static android.opengl.GLES20.GL_LINES;
 import static android.opengl.GLES20.GL_POINTS;
 import static android.opengl.GLES20.GL_TRIANGLES;
+import static android.opengl.GLES20.GL_TRIANGLE_FAN;
 import static android.opengl.GLES20.glClear;
 import static android.opengl.GLES20.glClearColor;
 import static android.opengl.GLES20.glDrawArrays;
@@ -60,7 +61,7 @@ public class AirHockeyRenderer implements GLSurfaceView.Renderer {
 
     public AirHockeyRenderer(Context context){
         this.context = context;
-        float[] tableVertices = {
+       /* float[] tableVertices = {
                 // Triangle 1
                 -0.5f, -0.5f,
                 0.5f,  0.5f,
@@ -94,19 +95,27 @@ public class AirHockeyRenderer implements GLSurfaceView.Renderer {
                 //margin bottom
                 -0.505f,-0.505f,
                 0.505f,-0.505f
-        };
+        };*/
         float[] tableVerticesWithTriangles = {
 
+                //triangle fan, basically draw the poligon figure with triangles one next to the other just like in a circunscript figure
+                // Order of coordinates: X, Y, R, G, B
 
+                // Triangle Fan
+                0f,    0f,   1f,   1f,   1f,
+                -0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
+                0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
+                0.5f,  0.5f, 0.7f, 0.7f, 0.7f,
+                -0.5f,  0.5f, 0.7f, 0.7f, 0.7f,
+                -0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
 
                 // Line 1
-                -0.5f, 0f,
-                0.5f, 0f,
+                -0.5f, 0f, 1f, 0f, 0f,
+                0.5f, 0f, 1f, 0f, 0f,
 
                 // Mallets
-                0f, -0.25f,
-                0f,  0.25f,
-
+                0f, -0.25f, 0f, 0f, 1f,
+                0f,  0.25f, 1f, 0f, 0f
 
         };
         vertexData = ByteBuffer.allocateDirect(tableVerticesWithTriangles.length * BYTES_PER_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
@@ -152,8 +161,10 @@ public class AirHockeyRenderer implements GLSurfaceView.Renderer {
     public void onDrawFrame(GL10 gl) {
         glClear(GL_COLOR_BUFFER_BIT);
         //draw the triangles
+        /*glUniform4f(uColorLocation, 1.0f, 1.0f, 1.0f, 1.0f);
+        glDrawArrays(GL_TRIANGLES, 0, 6);*/
         glUniform4f(uColorLocation, 1.0f, 1.0f, 1.0f, 1.0f);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawArrays(GL_TRIANGLE_FAN,0,6);
         //draw the dividing line in the table
         glUniform4f(uColorLocation, 1.0f, 0.0f, 0.0f, 1.0f);
         glDrawArrays(GL_LINES, 6, 2);
@@ -162,7 +173,7 @@ public class AirHockeyRenderer implements GLSurfaceView.Renderer {
         glDrawArrays(GL_POINTS,8,1);
         glUniform4f(uColorLocation, 1.0f,0.0f,0.0f,1.0f);
         glDrawArrays(GL_POINTS,9,1);
-        //draw a Puck
+       /* //draw a Puck
         glUniform4f(uColorLocation, 0.0f,0.0f,0.0f,1.0f);
         glDrawArrays(GL_POINTS,10,1);
         //draw margin left
@@ -176,6 +187,6 @@ public class AirHockeyRenderer implements GLSurfaceView.Renderer {
         glDrawArrays(GL_LINES, 15, 2);
         //drag margin bottom
         glUniform4f(uColorLocation, 0.0f, 1.0f, 1.0f, 1.0f);
-        glDrawArrays(GL_LINES, 17, 2);
+        glDrawArrays(GL_LINES, 17, 2);*/
     }
 }
