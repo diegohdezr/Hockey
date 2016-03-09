@@ -41,17 +41,25 @@ public class AirHockeyRenderer implements GLSurfaceView.Renderer {
     private static final int BYTES_PER_FLOAT = 4;
     private final FloatBuffer vertexData;
 
+    private static final String A_Color = "a_Color";
+    private static final int COLOR_COMPONENT_COUNT = 3;
+    /*Once OpenGL has read the position for a vertex, it will have to skip over the color
+    for the current vertex if it wants to read the position for the next vertex. we will use
+     this next variable to tell OpenGL how many bytes are between each position*/
+    private static final int STRIDE = (POSITION_COMPRONENT_COUNT + COLOR_COMPONENT_COUNT)* BYTES_PER_FLOAT;
     private final Context context;
 
     private int program;                                    //OpenGL program ID to link the shaders
-    private static final String U_COLOR = "u_Color";        //constant to refer to our color uniform
-    private int uColorLocation;                             //variable to hold the uniform pos in
+
+    //private static final String U_COLOR = "u_Color";        //constant to refer to our color uniform
+    //private int uColorLocation;                             //variable to hold the uniform pos in
                                                             // the OpenGL program, Uniform locations
                                                             //don't get specified beforehand so we
                                                             //we need this variable to query its pos later
     private static final String A_POSITION = "a_Position";
     private int aPositionLocation;                          //same stuff, like in uniform we store the position
                                                             //of our attributes here
+    private int aColorLocation;                              //same stuff with the string A_COLOR
 
     public AirHockeyRenderer(){
         //this default constructor should not be called
@@ -140,7 +148,8 @@ public class AirHockeyRenderer implements GLSurfaceView.Renderer {
         glUseProgram(program);
 
         //query and store the uniform location so that its value can be updated
-        uColorLocation = glGetUniformLocation(program, U_COLOR);
+        //uColorLocation = glGetUniformLocation(program, U_COLOR);
+        aColorLocation = glGetAttribLocation(program, A_Color);
 
         //query and store the atribute location so it can be updated
         aPositionLocation = glGetAttribLocation(program, A_POSITION);
@@ -148,8 +157,13 @@ public class AirHockeyRenderer implements GLSurfaceView.Renderer {
         vertexData.position(0);
         //passing incorrect arguments to this function can lead to strange results or even crash the app
         //so basically debug here if the error is not clear!
-        glVertexAttribPointer(aPositionLocation,POSITION_COMPRONENT_COUNT, GL_FLOAT,false,0, vertexData);
+        glVertexAttribPointer(aPositionLocation,POSITION_COMPRONENT_COUNT, GL_FLOAT,false,STRIDE, vertexData);
         glEnableVertexAttribArray(aPositionLocation);
+        //tell OpenGL to associate our vertex data with a_Color in the shader
+        vertexData.position(POSITION_COMPRONENT_COUNT);
+        glVertexAttribPointer(aColorLocation,COLOR_COMPONENT_COUNT,GL_FLOAT,false,STRIDE,vertexData);
+        glEnableVertexAttribArray(aColorLocation);
+
     }
 
     @Override
@@ -163,15 +177,15 @@ public class AirHockeyRenderer implements GLSurfaceView.Renderer {
         //draw the triangles
         /*glUniform4f(uColorLocation, 1.0f, 1.0f, 1.0f, 1.0f);
         glDrawArrays(GL_TRIANGLES, 0, 6);*/
-        glUniform4f(uColorLocation, 1.0f, 1.0f, 1.0f, 1.0f);
+        glUniform4f(aColorLocation, 1.0f, 1.0f, 1.0f, 1.0f);
         glDrawArrays(GL_TRIANGLE_FAN,0,6);
         //draw the dividing line in the table
-        glUniform4f(uColorLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+        glUniform4f(aColorLocation, 1.0f, 0.0f, 0.0f, 1.0f);
         glDrawArrays(GL_LINES, 6, 2);
         //draw the mallets
-        glUniform4f(uColorLocation,0.0f,0.0f,1.0f,1.0f);
+        glUniform4f(aColorLocation,0.0f,0.0f,1.0f,1.0f);
         glDrawArrays(GL_POINTS,8,1);
-        glUniform4f(uColorLocation, 1.0f,0.0f,0.0f,1.0f);
+        glUniform4f(aColorLocation, 1.0f,0.0f,0.0f,1.0f);
         glDrawArrays(GL_POINTS,9,1);
        /* //draw a Puck
         glUniform4f(uColorLocation, 0.0f,0.0f,0.0f,1.0f);
